@@ -1,14 +1,6 @@
 pipeline {
     agent any
 
-    parameters {
-        choice(
-            name: 'CUCUMBER_TAG',
-            choices: ['@animals', '@namePrediction', '@users', '@all'],
-            description: 'Feature group to execute'
-        )
-    }
-
     tools {
         maven 'Maven'
         jdk 'JDK21'
@@ -24,10 +16,7 @@ pipeline {
 
         stage('Build & Test') {
             steps {
-                script {
-                    def tag = params.CUCUMBER_TAG == '@all' ? '' : params.CUCUMBER_TAG
-                    sh "mvn clean test -Dcucumber.filter.tags=${tag}"
-                }
+                sh 'mvn clean test'
             }
         }
     }
@@ -35,8 +24,8 @@ pipeline {
     post {
         always {
             cucumber buildStatus: 'UNSTABLE',
-                     reportTitle: "API Automation Report - ${params.CUCUMBER_TAG}",
-                     fileIncludePattern: '**/cucumber.json'
+                     reportTitle: 'API Automation – Cucumber Report',
+                     fileIncludePattern: '**/cucumber*.json'
         }
     }
 }
