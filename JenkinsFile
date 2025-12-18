@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven'
+        jdk 'JDK21'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build & Test') {
+            steps {
+                sh 'mvn clean test'
+            }
+        }
+    }
+
+    post {
+        always {
+            cucumber buildStatus: 'UNSTABLE',
+                     reportTitle: 'API Automation – Cucumber Report',
+                     fileIncludePattern: '**/cucumber*.json'
+        }
+    }
+}
