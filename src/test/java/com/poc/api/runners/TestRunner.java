@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
                 "json:target/cucumber-report.json"
         },
         monochrome = true
+        tags = ""
 )
 public class TestRunner {
 }
